@@ -1,7 +1,12 @@
 const express = require("express");
 const app=express();
 const mongoose = require("mongoose"); 
+const listingsRouts= require("./src/routes/listingsRoutes.js");
+const cors=require ("cors");
 
+app.use(cors());
+
+app.use("/listings",listingsRouts);
 
 
 app.get("/",(req,res)=>{
@@ -20,4 +25,5 @@ const start = async () => {
 app.listen(8000,()=>{
     console.log("app is listing on port 8000");
 })
+
 

@@ -1,0 +1,68 @@
+/* Card Grid Container */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 cards in a row */
+    gap: 20px; 
+    padding: 20px;
+    justify-content: center;
+}
+
+
+
+
+/* Card Styles */
+.card {
+    width: 300px; 
+    height: 350px; 
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column; /* Ensure content stacks vertically */
+    justify-content: space-between; /* Space out content evenly */
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background-color: #f9f9f9;
+}
+
+.card img {
+    width: 100%;
+    height: 200px; 
+    object-fit: cover; 
+    border-bottom: 1px solid #ddd;
+}
+
+.card-body {
+    padding: 10px;
+    align-items: center;
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-body h2 {
+   
+    font-size: 1.5rem;
+    margin: 0 0 10px;
+    color: #333;
+    font-weight: bold;
+ 
+}
+
+.card-body p {
+    color: #555;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.card-body .price {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #007bff;
+}
