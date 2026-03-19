@@ -51,6 +51,24 @@ router.post("/", async (req, res)=>{
  
 })
 
+router.delete("/:id", async(req, res)=>{
+    try{
+
+    
+    const{id}=req.params;
+   let dlisting= await Listing.findByIdAndDelete(id);
+   console.log(dlisting);
+    res.status(200).json({ message: "Listing deleted successfully", dlisting });
+
+    }catch(e){
+       console.log(`sonmthing went wrong${e}`);
+       res.status(500).json({err:"faild to delete listing"});
+    }
+  
+});
+
+
+
 
 
 

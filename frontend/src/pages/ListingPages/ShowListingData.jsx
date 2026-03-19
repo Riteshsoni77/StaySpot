@@ -1,8 +1,8 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom";
-import {Box,Typography,Card,CardContent,CardMedia,Grid,CircularProgress,} from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import { Box, Typography, Card, CardContent, CardMedia, Grid, CircularProgress, Button, } from "@mui/material";
 import Footer from "../../conponents/includes/Footer";
 import Navbar from "../../conponents/includes/Navbar";
 
@@ -11,8 +11,24 @@ export default function ShowlistingData() {
     const [listingdata, setlistingdata] = useState();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    
+     const navigate = useNavigate();
 
+    const handledDelete =async () => {
+        try{
 
+         await axios.delete(`http://localhost:8000/listings/${id}`);
+          alert("Listing deleted successfully!");
+         navigate("/");
+        }catch(e){
+            console.log(`sonthing went wrong ${e}`);
+             alert("Failed to delete the listing. Please try again.");
+        }
+
+    }
+    const handleEdit=async()=>{
+        console.log( " you enter the edit button");
+    }
     useEffect(() => {
 
         const fetchListingData = async () => {
@@ -33,13 +49,13 @@ export default function ShowlistingData() {
 
     if (error) return <h2>Error: {error}</h2>;
     return (
-         <Box>
+        <Box>
             <Navbar />
             <Box
                 sx={{
                     maxWidth: "800px",
                     margin: "20px auto",
-                    marginTop:"100px",
+                    marginTop: "100px",
                     padding: "20px",
                     borderRadius: "10px",
                     boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
@@ -87,6 +103,43 @@ export default function ShowlistingData() {
                             </Grid>
                         </Grid>
                     </CardContent>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        onClick={handleEdit}
+
+                        sx={{
+                            marginLeft: "20px",
+                            marginBottom: "10px",
+                            padding: "10px",
+                            fontSize: "1rem",
+                            fontWeight: "bold",
+                            textTransform: "none",
+                        }}
+
+                    >
+                        Edit
+                    </Button>
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        onClick={handledDelete}
+                        sx={{
+                            marginLeft: "20px",
+                            marginBottom: "10px",
+                            padding: "10px",
+                            fontSize: "1rem",
+                            fontWeight: "bold",
+                            textTransform: "none",
+                            backgroundColor: "red",
+                        }}
+
+                    >
+                        Delete
+                    </Button>
                 </Card>
             </Box>
             <Footer />
