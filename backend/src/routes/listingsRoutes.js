@@ -36,5 +36,22 @@ router.get("/:id", async (req, res) => {
 
 
 
+router.post("/", async (req, res)=>{
+    try{
+          console.log("Request Body:", req.body);
+  const newlisting= new Listing(req.body.listing);
+ 
+  const savedListing= await newlisting.save();
+    res.status(201).json(savedListing);
+    }catch(e){
+        console.log(` somthing went wrong${e}`);
+         res.status(500).json({ error: "Failed to create listing" });
+    }
+ 
+ 
+})
+
+
+
 
 module.exports = router;

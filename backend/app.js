@@ -3,7 +3,7 @@ const app=express();
 const mongoose = require("mongoose"); 
 const listingsRouts= require("./src/routes/listingsRoutes.js");
 const cors=require ("cors");
-
+app.use(express.json());
 app.use(cors());
 
 app.use("/listings",listingsRouts);

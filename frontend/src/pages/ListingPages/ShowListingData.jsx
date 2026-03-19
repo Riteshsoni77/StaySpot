@@ -2,7 +2,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
-import "./showListingData.css";
+import {Box,Typography,Card,CardContent,CardMedia,Grid,CircularProgress,} from "@mui/material";
+import Footer from "../../conponents/includes/Footer";
+import Navbar from "../../conponents/includes/Navbar";
 
 export default function ShowlistingData() {
     const { id } = useParams();
@@ -31,33 +33,64 @@ export default function ShowlistingData() {
 
     if (error) return <h2>Error: {error}</h2>;
     return (
-
-
-
-        <div className="showcard"  key={listingdata._id} >
-            <img
-                className="showcardImage"
-                src={listingdata.image}
-                alt={listingdata.title}
-                style={{
-                    width: "100%",
-                    height: "400px",
-                    objectFit: "cover",
+         <Box>
+            <Navbar />
+            <Box
+                sx={{
+                    maxWidth: "800px",
+                    margin: "20px auto",
+                    marginTop:"100px",
+                    padding: "20px",
+                    borderRadius: "10px",
+                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
+                    backgroundColor: "#fff",
                 }}
-            />
-            <div className="showcarddata">
-                <h2>{listingdata.title}</h2>
-                {/* <p>{listing.description}</p> */}
-                <p><strong>Price:</strong> ${listingdata.price}</p>
-                <p><strong>Location:</strong> {listingdata.location}</p>
-            </div>
-        </div>
-
-
-
-
-
-
+            >
+                <Card>
+                    <CardMedia
+                        component="img"
+                        height="400"
+                        image={listingdata.image}
+                        alt={listingdata.title}
+                    />
+                    <CardContent>
+                        <Typography
+                            variant="h4"
+                            component="h2"
+                            gutterBottom
+                            sx={{ fontWeight: "bold", color: "#333" }}
+                        >
+                            {listingdata.title}
+                        </Typography>
+                        <Typography
+                            variant="body1"
+                            color="text.secondary"
+                            sx={{ marginBottom: "10px" }}
+                        >
+                            {listingdata.description}
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <Typography variant="body1">
+                                    <strong>Price:</strong> ₹{listingdata.price}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography variant="body1">
+                                    <strong>Location:</strong> {listingdata.location}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="body1">
+                                    <strong>Country:</strong> {listingdata.country}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
+            </Box>
+            <Footer />
+        </Box>
 
     )
 }
