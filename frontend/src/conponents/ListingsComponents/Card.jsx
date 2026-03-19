@@ -1,11 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import "./card.css";
 export default function Card({ listing }) {
     console.log(" this is listings ", listing);
+    const navigate = useNavigate();
     return (
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
 
-            <div className="card"  key={listing._id} >
+            <div className="card"  key={listing._id} onClick={()=>{
+                navigate(`/listing/${listing._id}`)
+            }} >
                 <img
                     className="cardImage"
                     src={listing.image}
