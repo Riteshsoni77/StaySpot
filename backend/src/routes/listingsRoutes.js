@@ -36,20 +36,50 @@ router.get("/:id", async (req, res) => {
 
 
 
-router.post("/", async (req, res)=>{
-    try{
-          console.log("Request Body:", req.body);
-  const newlisting= new Listing(req.body.listing);
- 
-  const savedListing= await newlisting.save();
-    res.status(201).json(savedListing);
-    }catch(e){
+router.post("/", async (req, res) => {
+    try {
+        console.log("Request Body:", req.body);
+        const newlisting = new Listing(req.body.listing);
+
+        const savedListing = await newlisting.save();
+        res.status(201).json(savedListing);
+    } catch (e) {
         console.log(` somthing went wrong${e}`);
-         res.status(500).json({ error: "Failed to create listing" });
+        res.status(500).json({ error: "Failed to create listing" });
     }
- 
- 
+
+
 })
+router.put("/:id", async (req, res) => {
+    try{
+  const { id } = req.params;
+  if (!req.body || !req.body.listing) {
+        throw new ExpressError(400, "Send valid data for listing");
+    }
+  const uplistings = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  res.status(200).json(uplistings); 
+}catch(e){
+     console.error(`Something went wrong: ${e}`);
+    res.status(500).json({ error: "Failed to update listing" });
+}
+});
+
+
+router.delete("/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        let dlisting = await Listing.findByIdAndDelete(id);
+        console.log(dlisting);
+        res.status(200).json({ message: "Listing deleted successfully", dlisting });
+
+    } catch (e) {
+        console.log(`sonmthing went wrong${e}`);
+        res.status(500).json({ err: "faild to delete listing" });
+    }
+
+});
+
+
 
 
 
