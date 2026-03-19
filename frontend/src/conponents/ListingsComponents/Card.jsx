@@ -8,7 +8,7 @@ export default function Card({ listing }) {
         <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
 
             <div className="card"  key={listing._id} onClick={()=>{
-                navigate(`/listing/${listing._id}`)
+                navigate(`/listing/${listing._id}`);
             }} >
                 <img
                     className="cardImage"

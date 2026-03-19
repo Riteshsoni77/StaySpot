@@ -27,7 +27,9 @@ export default function ShowlistingData() {
 
     }
     const handleEdit=async()=>{
-        console.log( " you enter the edit button");
+       navigate("/update-listing",{
+        state: { listingdata }
+       });
     }
     useEffect(() => {
 
