@@ -4,8 +4,10 @@ import Footer from "../../conponents/includes/Footer";
 import Navbar from "../../conponents/includes/Navbar";
 import axios from "axios";
 import { useNavigate, useNavigationType } from "react-router-dom";
+import server from "../../../environment";
 
 export default function CreateListings() {
+    const url=server;
      
       const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -25,7 +27,7 @@ export default function CreateListings() {
    const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:8000/listings", {
+        const response = await axios.post(`${url}/listings`, {
             listing: formData, 
         });
         

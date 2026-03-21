@@ -5,8 +5,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Box, Typography, Card, CardContent, CardMedia, Grid, CircularProgress, Button, } from "@mui/material";
 import Footer from "../../conponents/includes/Footer";
 import Navbar from "../../conponents/includes/Navbar";
+import server from "../../../environment";
 
 export default function ShowlistingData() {
+    const url=server;
     const { id } = useParams();
     const [listingdata, setlistingdata] = useState();
     const [error, setError] = useState(null);
@@ -17,7 +19,7 @@ export default function ShowlistingData() {
     const handledDelete =async () => {
         try{
 
-         await axios.delete(`http://localhost:8000/listings/${id}`);
+         await axios.delete(`${url}/listings/${id}`);
           alert("Listing deleted successfully!");
          navigate("/");
         }catch(e){
@@ -35,7 +37,7 @@ export default function ShowlistingData() {
 
         const fetchListingData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/listings/${id}`);
+                const response = await axios.get(`${url}/listings/${id}`);
                 setlistingdata(response.data);
 
             } catch (e) {
