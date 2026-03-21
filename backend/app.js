@@ -1,28 +1,40 @@
 const express = require("express");
-const app=express();
-const mongoose = require("mongoose"); 
-const listingsRouts= require("./src/routes/listingsRoutes.js");
-const cors=require ("cors");
+const app = express();
+const mongoose = require("mongoose");
+const listingsRouts = require("./src/routes/listingsRoutes.js");
+const cors = require("cors");
 app.use(express.json());
 app.use(cors());
 
-app.use("/listings",listingsRouts);
+app.use("/listings", listingsRouts);
 
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
     res.send(" this is working ");
 
 })
+
+app.all('/{*any}', (req, res, next) => {
+    next(new ExpressError(404, "Page not found"));
+});
+app.use((err, req, res, next) => {
+    let { statusCode = 500, message = "Somthing went Wrong" } = err;
+
+    res.json("error.ejs", { err });
+});
 
 const start = async () => {
     app.set("mongo_user")
     const connectionDb = await mongoose.connect('mongodb+srv://Ritiksoni:Ritiksoni@cluster0.b5c7axh.mongodb.net/?appName=Cluster0');
     console.log(`MONGO Connected DB HOst: ${connectionDb.connection.host}`)
 
-
 }
- start().catch((err) => console.log(err));
-app.listen(8000,()=>{
+start().catch((err) => console.log(err));
+
+
+
+
+app.listen(8000, () => {
     console.log("app is listing on port 8000");
 })
 
