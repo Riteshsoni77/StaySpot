@@ -2,7 +2,9 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const listingsRouts = require("./src/routes/listingsRoutes.js");
+const listingSchema = require("./schema.js");
 const cors = require("cors");
+const ExpressError = require("./src/utils/ExpressError.js");
 app.use(express.json());
 app.use(cors());
 
@@ -14,13 +16,14 @@ app.get("/", (req, res) => {
 
 })
 
+
 app.all('/{*any}', (req, res, next) => {
     next(new ExpressError(404, "Page not found"));
 });
 app.use((err, req, res, next) => {
     let { statusCode = 500, message = "Somthing went Wrong" } = err;
 
-    res.json("error.ejs", { err });
+    res.json( { err });
 });
 
 const start = async () => {

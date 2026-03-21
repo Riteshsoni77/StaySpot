@@ -4,6 +4,22 @@ const { default: mongoose } = require("mongoose");
 const wrapAsync = require("../utils/wrapAsync");
 const ExpressError = require("../utils/ExpressError");
 const router = express.Router();
+const {listingSchema}= require("../../schema");
+
+
+const validateListing  = (req, res, next) => {
+    console.log("Validating request body:", req.body);
+    const { error } = listingSchema.validate(req.body);
+    if (error) {
+        let errmsg=error.details.map((el)=>el.message).join(",");
+                console.error("Validation Error:", errmsg);
+        throw new ExpressError(400, errmsg);
+    } else {
+          console.log("Validation passed");
+        next();
+    }
+
+}
 
 router.get("/", wrapAsync(async (req, res) => {
     const allListings = await Listing.find({});
@@ -30,12 +46,12 @@ router.get("/:id", wrapAsync(async (req, res) => {
 
 
 
-router.post("/", wrapAsync(async (req, res) => {
+router.post("/", 
+   validateListing ,
+    wrapAsync(async (req, res) => {
 
     console.log("Request Body:", req.body);
-    if (!req.body || !req.body.listing) {
-        throw new ExpressError(400, "Send valid listing data");
-    }
+   
 
     const newlisting = new Listing(req.body.listing);
 
@@ -45,12 +61,12 @@ router.post("/", wrapAsync(async (req, res) => {
 
 
 }));
-router.put("/:id", wrapAsync(async (req, res) => {
+router.put("/:id", 
+    validateListing ,
+     wrapAsync(async (req, res) => {
 
     const { id } = req.params;
-    if (!req.body || !req.body.listing) {
-        throw new ExpressError(400, "Send valid listing data");
-    }
+    
 
 
     const uplistings = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
