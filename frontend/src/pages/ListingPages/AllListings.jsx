@@ -4,7 +4,7 @@ import Navbar from "../../components/includes/Navbar.jsx";
 import Footer from "../../components/includes/Footer.jsx";
 
 import server from "../../../environment.js";
-import Card from "../../components/listingscomponents/card.jsx";
+import Card from "../../components/listingscomponents/Card.jsx";
 
 export default function Listings() {
 
