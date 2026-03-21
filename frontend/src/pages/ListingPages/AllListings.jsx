@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Navbar from "../../conponents/includes/Navbar.jsx";
-import Footer from "../../conponents/includes/Footer.jsx";
-import Card from "../../conponents/ListingsComponents/card.jsx";
+import Navbar from "../../components/includes/Navbar.jsx";
+import Footer from "../../components/includes/Footer.jsx";
+import Card from "../../components/ListingsComponents/card.jsx";
 import server from "../../../environment.js";
 
 export default function Listings() {

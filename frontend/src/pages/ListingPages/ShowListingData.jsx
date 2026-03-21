@@ -3,8 +3,8 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Typography, Card, CardContent, CardMedia, Grid, CircularProgress, Button, } from "@mui/material";
-import Footer from "../../conponents/includes/Footer";
-import Navbar from "../../conponents/includes/Navbar";
+import Footer from "../../components/includes/Footer";
+import Navbar from "../../components/includes/Navbar";
 import server from "../../../environment";
 
 export default function ShowlistingData() {
