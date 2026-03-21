@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TextField, Button, Box, Typography, Grid } from "@mui/material";
-import Footer from "../../conponents/includes/Footer";
-import Navbar from "../../conponents/includes/Navbar";
+import Footer from "../../components/includes/Footer";
+import Navbar from "../../components/includes/Navbar";
 import axios from "axios";
 import { useLocation, useNavigate, useNavigationType } from "react-router-dom";
 import server from "../../../environment";
