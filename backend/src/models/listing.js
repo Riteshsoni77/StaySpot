@@ -10,10 +10,10 @@ const listingSchema=new Schema({
      description:String,
      image:{
         type:String,
-        default: "/Users/riteshsoni/Desktop/StaySpot/assets/photo-1712089295178-8ea08acd2ba4.avif",
-        set:(v)=> v===""? "/Users/riteshsoni/Desktop/StaySpot/assets/photo-1712089295178-8ea08acd2ba4.avif"
+        default: "https://images.unsplash.com/photo-1712089295178-8ea08acd2ba4",
+        set:(v)=> v===""? "https://images.unsplash.com/photo-1712089295178-8ea08acd2ba4"
         :v,
-
+ 
      },
      price:Number,
      location:String,

@@ -107,7 +107,7 @@ export default function CreateListings() {
                         placeholder="Enter image URL/Link"
                         value={formData.image}
                         onChange={handleChange}
-                        required
+                        
                     />
                 </Box>
                 <Grid container spacing={2}>

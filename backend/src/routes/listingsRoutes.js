@@ -1,86 +1,94 @@
 const express = require("express");
 const Listing = require("../models/listing");
 const { default: mongoose } = require("mongoose");
+const wrapAsync = require("../utils/wrapAsync");
+const ExpressError = require("../utils/ExpressError");
 const router = express.Router();
-
-router.get("/", async (req, res) => {
-    try {
-        const allListings = await Listing.find({});
-        res.json(allListings);
-    } catch (error) {
-        console.error("Error fetching listings:", error); // Log the error
-        res.status(500).json({ error: "Failed to fetch listings" });
-    }
-});
+const {listingSchema}= require("../../schema");
 
 
-router.get("/:id", async (req, res) => {
-    const { id } = req.params;
-    try {
-
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ error: "Invalid ID" });
-        }
-        const listingdata = await Listing.findById(id);
-        if (!listingdata
-
-        ) {
-            return res.status(404).json({ error: "Listing not found" });
-        }
-        res.json(listingdata);
-    } catch (e) {
-        console.log(` somthing went wrong ..${e}`)
+const validateListing  = (req, res, next) => {
+    console.log("Validating request body:", req.body);
+    const { error } = listingSchema.validate(req.body);
+    if (error) {
+        let errmsg=error.details.map((el)=>el.message).join(",");
+                console.error("Validation Error:", errmsg);
+        throw new ExpressError(400, errmsg);
+    } else {
+          console.log("Validation passed");
+        next();
     }
 
-});
-
-
-
-router.post("/", async (req, res) => {
-    try {
-        console.log("Request Body:", req.body);
-        const newlisting = new Listing(req.body.listing);
-
-        const savedListing = await newlisting.save();
-        res.status(201).json(savedListing);
-    } catch (e) {
-        console.log(` somthing went wrong${e}`);
-        res.status(500).json({ error: "Failed to create listing" });
-    }
-
-
-})
-router.put("/:id", async (req, res) => {
-    try{
-  const { id } = req.params;
-  if (!req.body || !req.body.listing) {
-        throw new ExpressError(400, "Send valid data for listing");
-    }
-  const uplistings = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-  res.status(200).json(uplistings); 
-}catch(e){
-     console.error(`Something went wrong: ${e}`);
-    res.status(500).json({ error: "Failed to update listing" });
 }
-});
+
+router.get("/", wrapAsync(async (req, res) => {
+    const allListings = await Listing.find({});
+    res.json(allListings);
+
+}));
 
 
-router.delete("/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        let dlisting = await Listing.findByIdAndDelete(id);
-        console.log(dlisting);
-        res.status(200).json({ message: "Listing deleted successfully", dlisting });
+router.get("/:id", wrapAsync(async (req, res) => {
+    const { id } = req.params;
 
-    } catch (e) {
-        console.log(`sonmthing went wrong${e}`);
-        res.status(500).json({ err: "faild to delete listing" });
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ExpressError(400, "Invalid ID");
     }
 
-});
+    const listingdata = await Listing.findById(id);
+
+    if (!listingdata) {
+        throw new ExpressError(404, "Listing not found");
+    }
+    res.json(listingdata);
+}));
 
 
 
+router.post("/", 
+   validateListing ,
+    wrapAsync(async (req, res) => {
+
+    console.log("Request Body:", req.body);
+   
+
+    const newlisting = new Listing(req.body.listing);
+
+    const savedListing = await newlisting.save();
+    res.status(201).json(savedListing);
+
+
+
+}));
+router.put("/:id", 
+    validateListing ,
+     wrapAsync(async (req, res) => {
+
+    const { id } = req.params;
+    
+
+
+    const uplistings = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    if (!uplistings) {
+        throw new ExpressError(404, "Listing not found");
+    }
+    res.status(200).json(uplistings);
+
+}));
+
+
+router.delete("/:id", wrapAsync(async (req, res) => {
+
+    const { id } = req.params;
+    let dlisting = await Listing.findByIdAndDelete(id);
+
+    if (!dlisting) {
+        throw new ExpressError(404, "Listing not found");
+    }
+    res.status(200).json({ message: "Listing deleted successfully", dlisting });
+
+}));
 
 
 
