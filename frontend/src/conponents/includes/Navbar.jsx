@@ -12,7 +12,7 @@ export default  function Navbar(){
             <ul className="navbar-links">
                 <li><a href="/">Home</a></li>
                 <li><a href="/listings">All Listings</a></li>
-                <li><a href="/add-listing">Add New Listings</a></li>
+                <li><a href="/listings/add">Add New Listings</a></li>
             </ul>
         </nav>
     );

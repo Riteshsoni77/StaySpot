@@ -5,6 +5,7 @@ const wrapAsync = require("../utils/wrapAsync");
 const ExpressError = require("../utils/ExpressError");
 const router = express.Router();
 const {listingSchema}= require("../../schema");
+const Review = require("../models/review");
 
 
 const validateListing  = (req, res, next) => {
@@ -46,7 +47,7 @@ router.get("/:id", wrapAsync(async (req, res) => {
 
 
 
-router.post("/", 
+router.post("/add", 
    validateListing ,
     wrapAsync(async (req, res) => {
 
@@ -89,6 +90,28 @@ router.delete("/:id", wrapAsync(async (req, res) => {
     res.status(200).json({ message: "Listing deleted successfully", dlisting });
 
 }));
+
+router.post("/:id/reviews",
+    wrapAsync(
+    async(req, res)=>{
+        let listing =await Listing.findById(req.params.id);
+
+        let newReview= new Review(req.body.review);
+        await newReview.save();
+
+        listing.reviews.push(newReview._id);
+        await listing.save();
+        console.log("new review saved");
+
+        res.json({
+            message:" review added successfully",
+            review:newReview
+        });
+
+    
+
+}));
+
 
 
 

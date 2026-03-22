@@ -25,7 +25,7 @@ export default function CreateListings() {
    const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:8000/listings", {
+        const response = await axios.post("http://localhost:8000/listings/add", {
             listing: formData, 
         });
         
