@@ -6,7 +6,14 @@ const listingSchema = require("./schema.js");
 const cors = require("cors");
 const ExpressError = require("./src/utils/ExpressError.js");
 app.use(express.json());
-app.use(cors());
+
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://stayspotfrontend.onrender.com/"
+  ],
+  credentials: true
+}));
 
 app.use("/listings", listingsRouts);
 
