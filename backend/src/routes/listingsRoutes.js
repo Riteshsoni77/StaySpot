@@ -4,7 +4,7 @@ const { default: mongoose } = require("mongoose");
 const wrapAsync = require("../utils/wrapAsync");
 const ExpressError = require("../utils/ExpressError");
 const router = express.Router();
-const {listingSchema}= require("../../schema");
+const {listingSchema, reviewSchema}= require("../../schema");
 const Review = require("../models/review");
 
 
@@ -21,6 +21,21 @@ const validateListing  = (req, res, next) => {
     }
 
 }
+const validateRiview  = (req, res, next) => {
+    console.log("Validating request body:", req.body);
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        let errmsg=error.details.map((el)=>el.message).join(",");
+                console.error("Validation Error:", errmsg);
+        throw new ExpressError(400, errmsg);
+    } else {
+          console.log("Validation passed");
+        next();
+    }
+
+}
+
+
 
 router.get("/", wrapAsync(async (req, res) => {
     const allListings = await Listing.find({});
@@ -37,7 +52,7 @@ router.get("/:id", wrapAsync(async (req, res) => {
         throw new ExpressError(400, "Invalid ID");
     }
 
-    const listingdata = await Listing.findById(id);
+    const listingdata = await Listing.findById(id).populate("reviews");
 
     if (!listingdata) {
         throw new ExpressError(404, "Listing not found");
@@ -92,6 +107,7 @@ router.delete("/:id", wrapAsync(async (req, res) => {
 }));
 
 router.post("/:id/reviews",
+    validateRiview,
     wrapAsync(
     async(req, res)=>{
         let listing =await Listing.findById(req.params.id);
@@ -108,9 +124,19 @@ router.post("/:id/reviews",
             review:newReview
         });
 
-    
-
 }));
+
+
+router.delete("/:id/reviews/:reviewId",
+    wrapAsync(async (req, res)=>{
+        let {id ,reviewId}=req.params;
+        await Listing.findByIdAndUpdate(id,{$pull:{reviews: reviewId}});
+        await Review.findByIdAndDelete(reviewId);
+        res.status(200).json({ message: "Review  deleted successfully"});
+
+    })
+);
+
 
 
 

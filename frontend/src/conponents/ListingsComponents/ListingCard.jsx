@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "./card.css";
+import "./ListingCard.css";
 export default function Card({ listing }) {
     console.log(" this is listings ", listing);
     const navigate = useNavigate();

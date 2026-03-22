@@ -1,35 +1,41 @@
 
 import axios from "axios";
-import { useEffect, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Typography, Card, CardContent, CardMedia, Grid, CircularProgress, Button, } from "@mui/material";
 import Footer from "../../conponents/includes/Footer";
 import Navbar from "../../conponents/includes/Navbar";
+import Reviewform from "../../conponents/ListingsComponents/ReviewForm";
+import { pink } from "@mui/material/colors";
+import Reviewscard from "../../conponents/ListingsComponents/ReviewsCard";
 
 export default function ShowlistingData() {
     const { id } = useParams();
+
     const [listingdata, setlistingdata] = useState();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
-    
-     const navigate = useNavigate();
+    console.log(listingdata);
 
-    const handledDelete =async () => {
-        try{
+    const navigate = useNavigate();
 
-         await axios.delete(`http://localhost:8000/listings/${id}`);
-          alert("Listing deleted successfully!");
-         navigate("/");
-        }catch(e){
+
+    const handledDelete = async () => {
+        try {
+
+            await axios.delete(`http://localhost:8000/listings/${id}`);
+            alert("Listing deleted successfully!");
+            navigate("/");
+        } catch (e) {
             console.log(`sonthing went wrong ${e}`);
-             alert("Failed to delete the listing. Please try again.");
+            alert("Failed to delete the listing. Please try again.");
         }
 
     }
-    const handleEdit=async()=>{
-       navigate("/update-listing",{
-        state: { listingdata }
-       });
+    const handleEdit = async () => {
+        navigate("/update-listing", {
+            state: { listingdata }
+        });
     }
     useEffect(() => {
 
@@ -45,7 +51,7 @@ export default function ShowlistingData() {
             }
         };
         fetchListingData();
-    }, [id]);
+    }, [id ,listingdata.reviews._id]);
 
     if (loading) return <h2>Loading...</h2>;
 
@@ -103,6 +109,8 @@ export default function ShowlistingData() {
                                     <strong>Country:</strong> {listingdata.country}
                                 </Typography>
                             </Grid>
+
+
                         </Grid>
                     </CardContent>
                     <Button
@@ -143,9 +151,23 @@ export default function ShowlistingData() {
                         Delete
                     </Button>
                 </Card>
+
+                <Grid sx={{margin:"20px"}} ><Reviewform id={id} /></Grid> 
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "1px", justifyContent: "center" }}>
+                {listingdata?.reviews?.map((review) => (
+                 
+                            <Reviewscard id={listingdata._id} review={review} key={review._id}  />
+
+                ))
+                }
+            </div>
+            
+
+          
             </Box>
-            <Footer />
+              <Footer />
+          
         </Box>
 
     )
-}
+};

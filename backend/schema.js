@@ -8,7 +8,22 @@ module.exports.listingSchema =joi.object({
          price: joi.number().required().min(0),
         image: joi.string().allow("",null),
 
-}).required()
+    }).required()
+
+
+
+});
+
+module.exports.reviewSchema=joi.object({
+    review:joi.object({
+
+    
+  
+    comment:joi.string().required(),
+     rating: joi.number().min(1).max(5).required()
+
+
+     }).required()
 
 });
 

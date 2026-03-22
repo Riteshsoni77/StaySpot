@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../../conponents/includes/Navbar.jsx";
 import Footer from "../../conponents/includes/Footer.jsx";
-import Card from "../../conponents/ListingsComponents/card.jsx";
+import Card from "../../conponents/ListingsComponents/ListingCard.jsx";
 
 export default function Listings() {
 
