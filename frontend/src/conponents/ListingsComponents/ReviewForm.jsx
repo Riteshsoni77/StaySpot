@@ -2,7 +2,7 @@ import { Button, Grid, Rating, TextField } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 
-export default function ReviewForm({ id }) {
+export default function ReviewForm({ id,onAddReview }) {
     console.log(" hi this the review ");
 
     const [formData, setFormData] = useState({
@@ -15,6 +15,13 @@ export default function ReviewForm({ id }) {
         setFormData((prev) => ({
             ...prev,
             [name]: value,
+        }));
+    };
+
+    const handleRatingChange = (event, newValue) => {
+        setFormData((prev) => ({
+            ...prev,
+            rating: newValue || 1,
         }));
     };
 
@@ -32,7 +39,8 @@ export default function ReviewForm({ id }) {
                     }
                 });
             console.log("Form Data Submitted Successfully:", res.data);
-            alert("Listing created successfully!");
+            alert("Review submitted successfully!");
+              onAddReview(res.data.review);
         } catch (e) {
             console.log(" ratin  is faild");
             alert("Failed to create listing. Please try again.");
@@ -42,37 +50,35 @@ export default function ReviewForm({ id }) {
 
     return (
         <div>
-        <form onSubmit={handleSubmit}>
-            <Grid container spacing={2} direction="column" alignItems="center">
-                <h2>Leave a Review</h2>
-                <Rating
-                    name="rating"
-                    value={formData.rating}
-                    onChange={handleChange}
-                />
-                <br />
-                <TextField
-                    id="outlined-multiline-static"
-                    label="Your Review"
-                    name="comment"
-                    multiline
-                    rows={4}
-                    value={formData.comment}
-                    onChange={handleChange}
-                    fullWidth
-                />
-                <br />
-                <Button type="submit" variant="contained">
-                    Submit
-                </Button>
-            </Grid>
-            
-        </form>
-      
+            <form onSubmit={handleSubmit}>
+                <Grid container spacing={2} direction="column" alignItems="center">
+                    <h2>Leave a Review</h2>
+                    <Rating
+                        name="rating"
+                        value={formData.rating}
+                        onChange={handleRatingChange}
+                    />
+                    <br />
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="Your Review"
+                        name="comment"
+                        multiline
+                        rows={4}
+                        value={formData.comment}
+                        onChange={handleChange}
+                        fullWidth
+                    />
+                    <br />
+                    <Button type="submit" variant="contained">
+                        Submit
+                    </Button>
+                </Grid>
 
+            </form>
 
         </div>
-       
-     
+
+
     );
 };

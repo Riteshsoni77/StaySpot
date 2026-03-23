@@ -15,11 +15,23 @@ export default function ShowlistingData() {
     const [listingdata, setlistingdata] = useState();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [reviews, setReviews] = useState([]);
     console.log(listingdata);
 
     const navigate = useNavigate();
+    console.log(" this isthe riview state", reviews);
 
 
+
+    const handleAddReview = (newReview) => {
+        setReviews((prev) => [newReview, ...prev]);
+    };
+
+    const handleDeleteReview = (reviewId) => {
+        setReviews((prev) =>
+            prev.filter((r) => r._id !== reviewId)
+        );
+    };
     const handledDelete = async () => {
         try {
 
@@ -43,6 +55,7 @@ export default function ShowlistingData() {
             try {
                 const response = await axios.get(`http://localhost:8000/listings/${id}`);
                 setlistingdata(response.data);
+                setReviews(response.data.reviews);
 
             } catch (e) {
                 console.log(`sonthing went wrong ....${e}`);
@@ -51,7 +64,8 @@ export default function ShowlistingData() {
             }
         };
         fetchListingData();
-    }, [id ,listingdata.reviews._id]);
+
+    }, [id,]);
 
     if (loading) return <h2>Loading...</h2>;
 
@@ -152,21 +166,27 @@ export default function ShowlistingData() {
                     </Button>
                 </Card>
 
-                <Grid sx={{margin:"20px"}} ><Reviewform id={id} /></Grid> 
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "1px", justifyContent: "center" }}>
-                {listingdata?.reviews?.map((review) => (
-                 
-                            <Reviewscard id={listingdata._id} review={review} key={review._id}  />
+                <Grid sx={{ margin: "20px" }} ><Reviewform id={id} onAddReview={handleAddReview} /></Grid>
 
-                ))
-                }
-            </div>
-            
 
-          
+
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "1px", justifyContent: "center" }}>
+                    {reviews.map((review) => (
+
+                        <Reviewscard id={listingdata._id} review={review}
+                            key={review._id}
+                            onDelete={() => handleDeleteReview(review._id)}
+                        />
+
+                    ))
+                    }
+                </div>
+
+
+
             </Box>
-              <Footer />
-          
+            <Footer />
+
         </Box>
 
     )
