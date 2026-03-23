@@ -2,13 +2,16 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const listingsRouts = require("./src/routes/listingsRoutes.js");
+const ReviewRoutes= require("./src/routes/ReviewRoutes.js")
 const listingSchema = require("./schema.js");
 const cors = require("cors");
 const ExpressError = require("./src/utils/ExpressError.js");
 app.use(express.json());
 app.use(cors());
 
+
 app.use("/listings", listingsRouts);
+app.use("/listings/:id/reviews",ReviewRoutes );
 
 
 app.get("/", (req, res) => {
@@ -40,5 +43,6 @@ start().catch((err) => console.log(err));
 app.listen(8000, () => {
     console.log("app is listing on port 8000");
 })
+
 
 

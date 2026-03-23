@@ -4,8 +4,8 @@ const { default: mongoose } = require("mongoose");
 const wrapAsync = require("../utils/wrapAsync");
 const ExpressError = require("../utils/ExpressError");
 const router = express.Router();
-const {listingSchema, reviewSchema}= require("../../schema");
-const Review = require("../models/review");
+const {listingSchema }= require("../../schema");
+
 
 
 const validateListing  = (req, res, next) => {
@@ -21,19 +21,7 @@ const validateListing  = (req, res, next) => {
     }
 
 }
-const validateRiview  = (req, res, next) => {
-    console.log("Validating request body:", req.body);
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        let errmsg=error.details.map((el)=>el.message).join(",");
-                console.error("Validation Error:", errmsg);
-        throw new ExpressError(400, errmsg);
-    } else {
-          console.log("Validation passed");
-        next();
-    }
 
-}
 
 
 
@@ -106,36 +94,7 @@ router.delete("/:id", wrapAsync(async (req, res) => {
 
 }));
 
-router.post("/:id/reviews",
-    validateRiview,
-    wrapAsync(
-    async(req, res)=>{
-        let listing =await Listing.findById(req.params.id);
 
-        let newReview= new Review(req.body.review);
-        await newReview.save();
-
-        listing.reviews.push(newReview._id);
-        await listing.save();
-        console.log("new review saved");
-
-        res.json({
-            message:" review added successfully",
-            review:newReview
-        });
-
-}));
-
-
-router.delete("/:id/reviews/:reviewId",
-    wrapAsync(async (req, res)=>{
-        let {id ,reviewId}=req.params;
-        await Listing.findByIdAndUpdate(id,{$pull:{reviews: reviewId}});
-        await Review.findByIdAndDelete(reviewId);
-        res.status(200).json({ message: "Review  deleted successfully"});
-
-    })
-);
 
 
 
