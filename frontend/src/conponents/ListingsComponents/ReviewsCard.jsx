@@ -2,8 +2,9 @@ import { Button, Card, Grid, Typography } from "@mui/material";
 import axios from "axios";
 
 export default function Reviewscard({ id, review, onDelete }) {
-    console.log(review._id);
+   
     console.log(id);
+    console.log(review);
 
     const handleDelete = async () => {
         try {
@@ -38,13 +39,13 @@ export default function Reviewscard({ id, review, onDelete }) {
 
                 <Grid item xs={12} >
                     <Typography variant="body1">
-                        <strong>Rating:</strong> {review.rating}
+                        <strong>Rating:</strong> {review?.rating}
                     </Typography>
 
                 </Grid>
                 <Grid item xs={12}>
                     <Typography variant="body1">
-                        <strong>comment:</strong> {review.comment}
+                        <strong>comment:</strong> {review?.comment}
                     </Typography>
                 </Grid>
             </Grid>

@@ -171,14 +171,21 @@ export default function ShowlistingData() {
 
 
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "1px", justifyContent: "center" }}>
-                    {reviews.map((review) => (
+                    {reviews?.length > 0 ? (
+                        reviews.map((review) => (
 
-                        <Reviewscard id={listingdata._id} review={review}
-                            key={review._id}
-                            onDelete={() => handleDeleteReview(review._id)}
-                        />
+                            <Reviewscard id={listingdata._id}
+                                review={review}
+                                key={review?._id}
+                                onDelete={() => handleDeleteReview(review._id)}
+                            />
 
-                    ))
+                        ))
+                    ) : (
+                        <Typography variant="body1" color="text.secondary">
+                            No reviews available.
+                        </Typography>
+                    )
                     }
                 </div>
 

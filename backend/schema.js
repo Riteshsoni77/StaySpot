@@ -1,4 +1,8 @@
+
 const joi =require('joi');
+
+
+
 module.exports.listingSchema =joi.object({
     listing:joi.object({
         title: joi.string().required(),
@@ -24,6 +28,18 @@ module.exports.reviewSchema=joi.object({
 
 
      }).required()
+
+});
+
+
+
+module.exports.userSchema = joi.object({
+ 
+    name: joi.string(),
+    username: joi.string().required(),
+    password: joi.string().min(6).required()
+
+ 
 
 });
 
