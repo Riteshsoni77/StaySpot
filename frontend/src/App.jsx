@@ -1,16 +1,19 @@
- import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+ import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
 import Listings from "./pages/ListingPages/AllListings";
 import ShowlistingData from "./pages/ListingPages/ShowListingData";
 import Createlistings from "./pages/ListingPages/CreateListings";
 import UpdateListings from "./pages/ListingPages/UpdateListings";
+import Authentication from "./pages/Auth/Authentication";
 
 function App() {
   
   return (
  <Router>
     <Routes>
-       <Route path="/" element={<Listings/>} />
+       <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="/user/Auth" element={<Authentication/>} />
+       <Route path="/home" element={<Listings/>} />
        <Route path="/listing/:id" element={<ShowlistingData/>} />
         <Route path="/listings/add" element={<Createlistings/>} />
          <Route path="/update-listing" element={<UpdateListings/>} />

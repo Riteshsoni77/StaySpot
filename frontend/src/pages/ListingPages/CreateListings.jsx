@@ -31,7 +31,7 @@ export default function CreateListings() {
         
         console.log("Form Data Submitted Successfully:", response.data);
         alert("Listing created successfully!");
-        navigate("/");
+        navigate("/home");
 
 
          setFormData({

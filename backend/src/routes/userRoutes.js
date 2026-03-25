@@ -43,7 +43,12 @@ router.post("/login",
 
             user.token = token;
             await user.save();
-            return res.status(200).json({ token: token })
+            // return res.status(200).json({ token: token})
+            return res.status(200).json({
+  token: token,
+  message: "Login successful"
+});
+            
         } else {
             return res.status(401).json({ message: "Invalid Username or password" })
         }

@@ -37,7 +37,7 @@ module.exports.userSchema = joi.object({
  
     name: joi.string(),
     username: joi.string().required(),
-    password: joi.string().min(6).required()
+    password: joi.string().min(4).required()
 
  
 
