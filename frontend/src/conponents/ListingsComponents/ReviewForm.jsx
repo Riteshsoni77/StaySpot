@@ -1,13 +1,19 @@
 import { Button, Grid, Rating, TextField } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ReviewForm({ id,onAddReview }) {
-    console.log(" hi this the review ");
+      const navigate = useNavigate();
+      const authData = JSON.parse(localStorage.getItem("authData"));
+      const user=authData?.user;
+    
+    console.log(" this is the review user",user);
 
     const [formData, setFormData] = useState({
         comment: "",
         rating: 2,
+        user:""
     });
 
     const handleChange = (e) => {
@@ -24,10 +30,18 @@ export default function ReviewForm({ id,onAddReview }) {
             rating: newValue || 1,
         }));
     };
-
+   
     const handleSubmit = async (e) => {
 
         e.preventDefault();
+        if (!authData) {
+         alert("first login to add a review");
+        
+         
+           navigate("/user/auth", { state: { from: `/listing/${id}` } });
+        return;
+    }
+
         try {
 
             const res = await axios.post(`http://localhost:8000/listings/${id}/reviews`,
@@ -35,7 +49,9 @@ export default function ReviewForm({ id,onAddReview }) {
                 {
                     review: {
                         comment: formData.comment,
-                        rating: formData.rating
+                        rating: formData.rating,
+                        user:user,
+                        
                     }
                 });
             console.log("Form Data Submitted Successfully:", res.data);

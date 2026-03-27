@@ -1,11 +1,14 @@
 import { Button, Card, Grid, Typography } from "@mui/material";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 export default function Reviewscard({ id, review, onDelete }) {
+     const authData = JSON.parse(localStorage.getItem("authData"));
+     
    
     console.log(id);
     console.log(review);
-
+    
     const handleDelete = async () => {
         try {
 
@@ -48,7 +51,13 @@ export default function Reviewscard({ id, review, onDelete }) {
                         <strong>comment:</strong> {review?.comment}
                     </Typography>
                 </Grid>
+                 <Grid item xs={12}>
+                    <Typography variant="body1">
+                        <strong>user:</strong> {review?.user}
+                    </Typography>
+                </Grid>
             </Grid>
+          
             <Button variant="contained" onClick={handleDelete}>
                 Delete
             </Button>

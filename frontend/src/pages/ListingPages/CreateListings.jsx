@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TextField, Button, Box, Typography, Grid } from "@mui/material";
 import Footer from "../../conponents/includes/Footer";
 import Navbar from "../../conponents/includes/Navbar";
 import axios from "axios";
-import { useNavigate, useNavigationType } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useNavigationType } from "react-router-dom";
 
 export default function CreateListings() {
+    
+   const navigate = useNavigate();
+    const location = useLocation();
+const authData = JSON.parse(localStorage.getItem("authData"));
+        const user=authData?.user;
+   useEffect(() => {
+        
+        console.log(authData);
+        console.log(user);
+        
+        if (!authData) {
+            alert("You need to log in first!");
+           navigate("/user/auth", { state: { from: "/listings/add" } });
+        }
+    }, [navigate]);
      
-      const navigate = useNavigate();
+      
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -15,6 +30,7 @@ export default function CreateListings() {
         price: "",
         location: "",
         country: "",
+        owner:"",
     });
 
     const handleChange = (e) => {
@@ -25,8 +41,13 @@ export default function CreateListings() {
    const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+         const listingData = {
+            ...formData,
+            owner: user, // Use the user ID from authData
+        };
         const response = await axios.post("http://localhost:8000/listings/add", {
-            listing: formData, 
+            listing: listingData,
+            
         });
         
         console.log("Form Data Submitted Successfully:", response.data);
@@ -41,6 +62,7 @@ export default function CreateListings() {
             price: "",
             location: "",
             country: "",
+            owner:"",
         });
     } catch (error) {
         console.error("Error submitting form data:", error);

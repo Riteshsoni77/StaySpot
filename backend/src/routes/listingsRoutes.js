@@ -56,7 +56,7 @@ router.post("/add",
 
     console.log("Request Body:", req.body);
    
-
+   
     const newlisting = new Listing(req.body.listing);
 
     const savedListing = await newlisting.save();
@@ -93,6 +93,7 @@ router.delete("/:id", wrapAsync(async (req, res) => {
     res.status(200).json({ message: "Listing deleted successfully", dlisting });
 
 }));
+
 
 
 

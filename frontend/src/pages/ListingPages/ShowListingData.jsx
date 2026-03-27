@@ -16,6 +16,7 @@ export default function ShowlistingData() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [reviews, setReviews] = useState([]);
+    
     console.log(listingdata);
 
     const navigate = useNavigate();
@@ -56,6 +57,7 @@ export default function ShowlistingData() {
                 const response = await axios.get(`http://localhost:8000/listings/${id}`);
                 setlistingdata(response.data);
                 setReviews(response.data.reviews);
+                 
 
             } catch (e) {
                 console.log(`sonthing went wrong ....${e}`);
@@ -66,7 +68,8 @@ export default function ShowlistingData() {
         fetchListingData();
 
     }, [id,]);
-
+ 
+  
     if (loading) return <h2>Loading...</h2>;
 
     if (error) return <h2>Error: {error}</h2>;
@@ -166,7 +169,12 @@ export default function ShowlistingData() {
                     </Button>
                 </Card>
 
-                <Grid sx={{ margin: "20px" }} ><Reviewform id={id} onAddReview={handleAddReview} /></Grid>
+                <Grid sx={{ margin: "20px" }} >
+                    <Reviewform id={id} 
+                    onAddReview={handleAddReview} 
+                   
+                    />
+                    </Grid>
 
 
 
@@ -177,6 +185,7 @@ export default function ShowlistingData() {
                             <Reviewscard id={listingdata._id}
                                 review={review}
                                 key={review?._id}
+                                
                                 onDelete={() => handleDeleteReview(review._id)}
                             />
 

@@ -9,6 +9,7 @@ const reviewSchema= new  Schema(
             min:1,
             max:5,
         },
+        user:String,
 
         createdAt:{
             type:Date,
