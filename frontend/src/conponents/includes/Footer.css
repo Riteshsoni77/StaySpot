@@ -1,16 +1,17 @@
-/* Footer Styles */
+
 .footer {
-    background-color: #f8f9fa; /* Light gray background */
+    background-color: #f8f9fa; 
     padding: 20px;
     text-align: center;
-    border-top: 1px solid #ddd; /* Subtle border at the top */
+    border-top: 1px solid #ddd; 
     font-size: 0.9rem;
-    color: #666; /* Light gray text color */
+    color: #666; 
     font-family: Arial, sans-serif;
+    
 }
 
 .footer a {
-    color: #007bff; /* Blue color for links */
+    color: #007bff; 
     text-decoration: none;
     margin: 0 10px;
     font-weight: 500;
@@ -18,7 +19,7 @@
 }
 
 .footer a:hover {
-    color: #0056b3; /* Darker blue on hover */
+    color: #0056b3; 
 }
 
 .footer .social-icons {
@@ -34,6 +35,6 @@
 }
 
 .footer .social-icons i:hover {
-    color: #007bff; /* Blue color on hover */
-    transform: scale(1.2); /* Slightly enlarge on hover */
+    color: #007bff; 
+    transform: scale(1.2); 
 }

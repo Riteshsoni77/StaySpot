@@ -11,6 +11,7 @@ module.exports.listingSchema =joi.object({
         country: joi.string().required(),
          price: joi.number().required().min(0),
         image: joi.string().allow("",null),
+         owner: joi.string().required(),
 
     }).required()
 
@@ -24,7 +25,8 @@ module.exports.reviewSchema=joi.object({
     
   
     comment:joi.string().required(),
-     rating: joi.number().min(1).max(5).required()
+     rating: joi.number().min(1).max(5).required(),
+     user:joi.string().required()
 
 
      }).required()
@@ -37,7 +39,7 @@ module.exports.userSchema = joi.object({
  
     name: joi.string(),
     username: joi.string().required(),
-    password: joi.string().min(6).required()
+    password: joi.string().min(4).required()
 
  
 
