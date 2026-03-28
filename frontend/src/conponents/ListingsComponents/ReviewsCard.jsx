@@ -4,15 +4,23 @@ import { Navigate } from "react-router-dom";
 
 export default function Reviewscard({ id, review, onDelete }) {
      const authData = JSON.parse(localStorage.getItem("authData"));
+    
+    const token=authData?.token;
      
    
-    console.log(id);
-    console.log(review);
+   
+    console.log("this is riviews ",review);
     
     const handleDelete = async () => {
         try {
 
-            await axios.delete(`http://localhost:8000/listings/${id}/reviews/${review._id}`);
+            await axios.delete(`http://localhost:8000/listings/${id}/reviews/${review._id}`,
+          {      
+   headers: {
+    Authorization: token,
+  }
+     
+         } );
 
             alert("review deleted successfully!");
             onDelete();
@@ -51,11 +59,12 @@ export default function Reviewscard({ id, review, onDelete }) {
                         <strong>comment:</strong> {review?.comment}
                     </Typography>
                 </Grid>
-                 <Grid item xs={12}>
+                <Grid item xs={12}>
                     <Typography variant="body1">
-                        <strong>user:</strong> {review?.user}
+                        <strong>user:</strong> {review?.user.name}
                     </Typography>
                 </Grid>
+                
             </Grid>
           
             <Button variant="contained" onClick={handleDelete}>

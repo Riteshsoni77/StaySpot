@@ -32,6 +32,7 @@ export default function ShowlistingData() {
         setReviews((prev) =>
             prev.filter((r) => r._id !== reviewId)
         );
+        
     };
     const handledDelete = async () => {
         try {
@@ -126,6 +127,12 @@ export default function ShowlistingData() {
                                     <strong>Country:</strong> {listingdata.country}
                                 </Typography>
                             </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="body1">
+                                    <strong>owner:</strong> {listingdata.owner.name}
+                                </Typography>
+                            </Grid>
+                            
 
 
                         </Grid>

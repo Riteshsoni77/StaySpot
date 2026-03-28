@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const listingsRouts = require("./src/routes/listingsRoutes.js");
 const ReviewRoutes= require("./src/routes/ReviewRoutes.js");
 const userRoutes= require("./src/routes/userRoutes.js");
+const isLoggedIn = require('./src/middleware/auth');
 
 const cors = require("cors");
 const ExpressError = require("./src/utils/ExpressError.js");
@@ -11,9 +12,11 @@ app.use(express.json());
 app.use(cors());
 
 
+
 app.use("/listings", listingsRouts);
 app.use("/listings/:id/reviews",ReviewRoutes );
 app.use("/user",userRoutes);
+
 
 
 app.get("/", (req, res) => {

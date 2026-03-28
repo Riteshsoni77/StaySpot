@@ -6,14 +6,14 @@ import { useNavigate } from "react-router-dom";
 export default function ReviewForm({ id,onAddReview }) {
       const navigate = useNavigate();
       const authData = JSON.parse(localStorage.getItem("authData"));
-      const user=authData?.user;
+      const token=authData?.token;
     
-    console.log(" this is the review user",user);
+  
 
     const [formData, setFormData] = useState({
         comment: "",
         rating: 2,
-        user:""
+       
     });
 
     const handleChange = (e) => {
@@ -46,14 +46,17 @@ export default function ReviewForm({ id,onAddReview }) {
 
             const res = await axios.post(`http://localhost:8000/listings/${id}/reviews`,
 
-                {
-                    review: {
-                        comment: formData.comment,
-                        rating: formData.rating,
-                        user:user,
-                        
-                    }
-                });
+                 {
+                review: {
+                    comment: formData.comment,
+                    rating: formData.rating,
+                }
+            },
+            {
+                headers: {
+                    Authorization: token,  
+                }
+            });
             console.log("Form Data Submitted Successfully:", res.data);
             alert("Review submitted successfully!");
               onAddReview(res.data.review);

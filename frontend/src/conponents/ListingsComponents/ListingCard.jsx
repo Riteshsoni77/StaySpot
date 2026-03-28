@@ -20,6 +20,8 @@ export default function Card({ listing }) {
                 {/* <p>{listing.description}</p> */}
                 <p><strong>Price:</strong> ${listing.price}</p>
                 <p><strong>Location:</strong> {listing.location}</p>
+                 
+              
                 </div>
             </div>
 

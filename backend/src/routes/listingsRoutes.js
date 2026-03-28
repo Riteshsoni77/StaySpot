@@ -5,6 +5,7 @@ const wrapAsync = require("../utils/wrapAsync");
 const ExpressError = require("../utils/ExpressError");
 const router = express.Router();
 const {listingSchema }= require("../../schema");
+const isLoggedIn = require("../middleware/auth");
 
 
 
@@ -40,8 +41,14 @@ router.get("/:id", wrapAsync(async (req, res) => {
         throw new ExpressError(400, "Invalid ID");
     }
 
-    const listingdata = await Listing.findById(id).populate("reviews");
-
+    const listingdata = await Listing.findById(id) .populate("owner", "username name")   
+        .populate({
+            path: "reviews",
+            populate: {
+                path: "user",
+                select: "username name"  
+            }
+        }); 
     if (!listingdata) {
         throw new ExpressError(404, "Listing not found");
     }
@@ -51,6 +58,7 @@ router.get("/:id", wrapAsync(async (req, res) => {
 
 
 router.post("/add", 
+     isLoggedIn,
    validateListing ,
     wrapAsync(async (req, res) => {
 
@@ -58,10 +66,10 @@ router.post("/add",
    
    
     const newlisting = new Listing(req.body.listing);
+     newlisting.owner = req.user._id;
 
     const savedListing = await newlisting.save();
     res.status(201).json(savedListing);
-
 
 
 }));
@@ -94,11 +102,4 @@ router.delete("/:id", wrapAsync(async (req, res) => {
 
 }));
 
-
-
-
-
-
-
-
-module.exports = router;
+module.exports = router; 
