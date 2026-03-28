@@ -10,19 +10,14 @@ export default function CreateListings() {
    const navigate = useNavigate();
     const location = useLocation();
 const authData = JSON.parse(localStorage.getItem("authData"));
-        const user=authData?.user;
-   useEffect(() => {
-        
-        console.log(authData);
-        console.log(user);
-        
-        if (!authData) {
-            alert("You need to log in first!");
-           navigate("/user/auth", { state: { from: "/listings/add" } });
-        }
-    }, [navigate]);
-     
-      
+    const user=authData?.user;
+    const token=authData?.token;
+    console.log(token);
+     if (!token) {
+        alert("You need to log in first!");
+        navigate("/user/auth", { state: { from: "/listings/add" } });
+        return;
+    }      
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -30,7 +25,7 @@ const authData = JSON.parse(localStorage.getItem("authData"));
         price: "",
         location: "",
         country: "",
-        owner:"",
+       
     });
 
     const handleChange = (e) => {
@@ -41,14 +36,18 @@ const authData = JSON.parse(localStorage.getItem("authData"));
    const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-         const listingData = {
-            ...formData,
-            owner: user, // Use the user ID from authData
-        };
-        const response = await axios.post("http://localhost:8000/listings/add", {
-            listing: listingData,
+        
+        const response = await axios.post("http://localhost:8000/listings/add", 
+          {
+                listing: formData   
+            },
+            {
+                headers: {
+                    Authorization: token   
+                }
+            }
             
-        });
+    );
         
         console.log("Form Data Submitted Successfully:", response.data);
         alert("Listing created successfully!");
@@ -62,7 +61,6 @@ const authData = JSON.parse(localStorage.getItem("authData"));
             price: "",
             location: "",
             country: "",
-            owner:"",
         });
     } catch (error) {
         console.error("Error submitting form data:", error);

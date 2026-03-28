@@ -5,6 +5,7 @@ const wrapAsync = require("../utils/wrapAsync");
 const Review = require("../models/review");
 const ExpressError = require("../utils/ExpressError");
 const Listing = require("../models/listing");
+const isLoggedIn = require("../middleware/auth");
 
 const router = express.Router({ mergeParams: true });
 
@@ -27,34 +28,48 @@ const validateRiview  = (req, res, next) => {
 
 
 router.post("/",
+    isLoggedIn,
     validateRiview,
-    wrapAsync(
-    async(req, res)=>{
-        let listing =await Listing.findById(req.params.id);
+    wrapAsync(async (req, res) => {
 
-        let newReview= new Review(req.body.review);
+        let listing = await Listing.findById(req.params.id);
+
         
+        let newReview = new Review(req.body.review);
+
+        newReview.user = req.user._id;
+
         await newReview.save();
 
         listing.reviews.push(newReview._id);
         await listing.save();
-        console.log("new review saved");
 
         res.json({
-            message:" review added successfully",
-            review:newReview
+            message: "review added successfully",
+            review: newReview
         });
-
 }));
 
 
-router.delete("/:reviewId",
-    wrapAsync(async (req, res)=>{
-        let {id ,reviewId}=req.params;
-        await Listing.findByIdAndUpdate(id,{$pull:{reviews: reviewId}});
-        await Review.findByIdAndDelete(reviewId);
-        res.status(200).json({ message: "Review  deleted successfully"});
 
+
+router.delete("/:reviewId",
+    isLoggedIn,
+    wrapAsync(async (req, res) => {
+        const { id, reviewId } = req.params;
+        const review = await Review.findById(reviewId);
+        if (!review) {
+            return res.status(404).json({ message: "Review not found" });
+        }
+        if (!review.user.equals(req.user._id)) {
+            return res.status(403).json({ message: "You are not allowed to delete this review" });
+        }
+        await Listing.findByIdAndUpdate(id, {
+            $pull: { reviews: reviewId }
+        });
+        await Review.findByIdAndDelete(reviewId);
+
+        res.status(200).json({ message: "Review deleted successfully" });
     })
 );
 

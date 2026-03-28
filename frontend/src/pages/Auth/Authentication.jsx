@@ -46,6 +46,8 @@ export default function Authentication() {
         localStorage.setItem("authData", JSON.stringify({
           token: response.data.token,
           user: response.data.user._id,
+          username:response.data.user.name,
+          
           
         }));
 console.log(response.data.user._id);

@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import { memo, useEffect, useState } from "react"
+import {  useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Typography, Card, CardContent, CardMedia, Grid, CircularProgress, Button, } from "@mui/material";
 import Footer from "../../conponents/includes/Footer";
@@ -11,12 +11,15 @@ import Reviewscard from "../../conponents/ListingsComponents/ReviewsCard";
 
 export default function ShowlistingData() {
     const { id } = useParams();
+    const authData = JSON.parse(localStorage.getItem("authData"));
+    const userid = authData?.user;
+    const token = authData?.token;
 
     const [listingdata, setlistingdata] = useState();
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [reviews, setReviews] = useState([]);
-    
+
     console.log(listingdata);
 
     const navigate = useNavigate();
@@ -32,13 +35,28 @@ export default function ShowlistingData() {
         setReviews((prev) =>
             prev.filter((r) => r._id !== reviewId)
         );
+
     };
     const handledDelete = async () => {
+        if (!token) {
+            alert("Please login first!");
+            return;
+        }
+
         try {
 
-            await axios.delete(`http://localhost:8000/listings/${id}`);
+            await axios.delete(`http://localhost:8000/listings/${id}`,
+                {
+                    headers: {
+                        Authorization: token,
+                    }
+
+                }
+            );
             alert("Listing deleted successfully!");
-            navigate("/");
+            navigate("/listings/mylisting");
+             
+            
         } catch (e) {
             console.log(`sonthing went wrong ${e}`);
             alert("Failed to delete the listing. Please try again.");
@@ -57,7 +75,7 @@ export default function ShowlistingData() {
                 const response = await axios.get(`http://localhost:8000/listings/${id}`);
                 setlistingdata(response.data);
                 setReviews(response.data.reviews);
-                 
+
 
             } catch (e) {
                 console.log(`sonthing went wrong ....${e}`);
@@ -68,8 +86,8 @@ export default function ShowlistingData() {
         fetchListingData();
 
     }, [id,]);
- 
-  
+
+
     if (loading) return <h2>Loading...</h2>;
 
     if (error) return <h2>Error: {error}</h2>;
@@ -113,24 +131,30 @@ export default function ShowlistingData() {
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 <Typography variant="body1">
-                                    <strong>Price:</strong> ₹{listingdata.price}
+                                    <strong>Price:</strong> ₹{listingdata?.price}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Typography variant="body1">
-                                    <strong>Location:</strong> {listingdata.location}
+                                    <strong>Location:</strong> {listingdata?.location}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography variant="body1">
-                                    <strong>Country:</strong> {listingdata.country}
+                                    <strong>Country:</strong> {listingdata?.country}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="body1">
+                                    <strong>owner:</strong> {listingdata?.owner?.name}
                                 </Typography>
                             </Grid>
 
 
+
                         </Grid>
                     </CardContent>
-                    <Button
+                    {userid === listingdata.owner?._id ? <Button
                         type="submit"
                         variant="contained"
                         color="primary"
@@ -147,9 +171,9 @@ export default function ShowlistingData() {
 
                     >
                         Edit
-                    </Button>
+                    </Button> : <></>}
 
-                    <Button
+                    {userid === listingdata.owner?._id ? <Button
                         type="submit"
                         variant="contained"
                         color="primary"
@@ -166,15 +190,15 @@ export default function ShowlistingData() {
 
                     >
                         Delete
-                    </Button>
+                    </Button> : <></>}
                 </Card>
 
                 <Grid sx={{ margin: "20px" }} >
-                    <Reviewform id={id} 
-                    onAddReview={handleAddReview} 
-                   
+                    <Reviewform id={id}
+                        onAddReview={handleAddReview}
+
                     />
-                    </Grid>
+                </Grid>
 
 
 
@@ -185,7 +209,7 @@ export default function ShowlistingData() {
                             <Reviewscard id={listingdata._id}
                                 review={review}
                                 key={review?._id}
-                                
+
                                 onDelete={() => handleDeleteReview(review._id)}
                             />
 

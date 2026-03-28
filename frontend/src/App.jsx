@@ -5,6 +5,7 @@ import ShowlistingData from "./pages/ListingPages/ShowListingData";
 import Createlistings from "./pages/ListingPages/CreateListings";
 import UpdateListings from "./pages/ListingPages/UpdateListings";
 import Authentication from "./pages/Auth/Authentication";
+import Userlistings from "./pages/ListingPages/userlistings";
 
 function App() {
   
@@ -17,6 +18,7 @@ function App() {
        <Route path="/listing/:id" element={<ShowlistingData/>} />
         <Route path="/listings/add" element={<Createlistings/>} />
          <Route path="/update-listing" element={<UpdateListings/>} />
+         <Route path = "/listings/mylisting" element={<Userlistings/>}/>
 
 
     </Routes>
