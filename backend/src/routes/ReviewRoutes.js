@@ -51,15 +51,7 @@ router.post("/",
 }));
 
 
-// router.delete("/:reviewId",
-//     wrapAsync(async (req, res)=>{
-//         let {id ,reviewId}=req.params;
-//         await Listing.findByIdAndUpdate(id,{$pull:{reviews: reviewId}});
-//         await Review.findByIdAndDelete(reviewId);
-//         res.status(200).json({ message: "Review  deleted successfully"});
 
-//     })
-// );
 
 router.delete("/:reviewId",
     isLoggedIn,

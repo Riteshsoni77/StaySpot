@@ -18,7 +18,7 @@ function App() {
        <Route path="/listing/:id" element={<ShowlistingData/>} />
         <Route path="/listings/add" element={<Createlistings/>} />
          <Route path="/update-listing" element={<UpdateListings/>} />
-         <Route path = "/listings/userlisting" element={<Userlistings/>}/>
+         <Route path = "/listings/mylisting" element={<Userlistings/>}/>
 
 
     </Routes>

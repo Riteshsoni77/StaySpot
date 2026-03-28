@@ -28,7 +28,7 @@ const navigate = useNavigate();
                             </a>
                         </li>
                         <li>
-                            <a href="/listings/userlisting">UserListing</a>
+                            <a href="/listings/mylisting">MyListing</a>
                         </li>
                         <li>
                             <a href="/listings/add">Add New Listings</a>

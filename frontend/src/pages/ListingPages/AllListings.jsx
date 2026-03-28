@@ -36,26 +36,26 @@ export default function Listings() {
     return (
         <div>
             <div ><Navbar /> </div>
-        <div>
-            
-            <h2 style={{ marginTop: "80px", textAlign: "center" }}>All Listings</h2>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "center" }}>
-                {
-                    listings.map((listing) => (
-                        
-                        <Card key={listing._id} listing={listing} />
-                       
+            <div>
 
-                    ))
-                }
+                <h2 style={{ marginTop: "80px", textAlign: "center" }}>All Listings</h2>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "center" }}>
+                    {
+                        listings.map((listing) => (
+
+                            <Card key={listing._id} listing={listing} />
+
+
+                        ))
+                    }
+
+                </div>
+
+
 
             </div>
-
-          
-
+            <Footer />
         </div>
-          <Footer />
-        </div>
-        
+
     );
 };

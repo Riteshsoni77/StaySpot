@@ -6,6 +6,8 @@ export default function Reviewscard({ id, review, onDelete }) {
      const authData = JSON.parse(localStorage.getItem("authData"));
     
     const token=authData?.token;
+    const userid=authData?.user;
+    console.log( " thi sis user ",userid);
      
    
    
@@ -67,9 +69,9 @@ export default function Reviewscard({ id, review, onDelete }) {
                 
             </Grid>
           
-            <Button variant="contained" onClick={handleDelete}>
+            { userid===review.user?._id?<Button variant="contained" onClick={handleDelete}>
                 Delete
-            </Button>
+            </Button>:<> </>}
 
         </Card>
     )

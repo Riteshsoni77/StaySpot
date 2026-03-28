@@ -74,12 +74,21 @@ router.post("/add",
 
 }));
 router.put("/:id", 
+    isLoggedIn,
     validateListing ,
      wrapAsync(async (req, res) => {
 
     const { id } = req.params;
     
+  const listing = await Listing.findById(id);
 
+    if (!listing) {
+      throw new ExpressError(404, "Listing not found");
+    }
+
+    if (!listing.owner.equals(req.user._id)) {
+      return res.status(403).json({ message: "You are not allowed to edit this listing" });
+    }
 
     const uplistings = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     if (!uplistings) {
@@ -90,9 +99,22 @@ router.put("/:id",
 }));
 
 
-router.delete("/:id", wrapAsync(async (req, res) => {
+router.delete("/:id",
+    isLoggedIn,
+     wrapAsync(async (req, res) => {
 
     const { id } = req.params;
+
+    const listing = await Listing.findById(id);
+
+    if (!listing) {
+      throw new ExpressError(404, "Listing not found");
+    }
+    if (!listing.owner.equals(req.user._id)) {
+      return res.status(403).json({
+        message: "You are not allowed to delete this listing"
+      });
+    }
     let dlisting = await Listing.findByIdAndDelete(id);
 
     if (!dlisting) {
@@ -101,5 +123,25 @@ router.delete("/:id", wrapAsync(async (req, res) => {
     res.status(200).json({ message: "Listing deleted successfully", dlisting });
 
 }));
+
+
+
+
+router.get("/mylisting/:id", 
+    isLoggedIn,
+    wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    console.log(req.params);
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ExpressError(400, "Invalid ID");
+    }
+    const listings = await Listing.find({ owner: id });
+    if (!listings || listings.length === 0) {
+        throw new ExpressError(404, "No listings found for this user");
+    }
+    res.status(200).json(listings);
+}));
+
 
 module.exports = router; 

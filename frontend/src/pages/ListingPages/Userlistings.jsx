@@ -9,44 +9,39 @@ export default function Userlistings() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Get userId from localStorage
+  
   const authData = JSON.parse(localStorage.getItem("authData") || "{}");
-  const userId = authData?.user;        // ← This is already the ID (string)
-
+  const userId = authData?.user; 
+  const token=authData?.token;      
   console.log("User ID from localStorage:", userId);
 
   useEffect(() => {
-    const fetchUserListings = async () => {
-      if (!userId) {
-        setError("Please login to view your listings");
-        setLoading(false);
-        return;
-      }
+  const fetchUserListings = async () => {
+    try {
 
-      try {
-        setLoading(true);
-        
-        const response = await axios.get("http://localhost:8000/listings/userlisting", {
-          params: { userId },           // ← Sending userId correctly
-        });
+      const res = await axios.get(
+        `http://localhost:8000/listings/mylisting/${userId}`,
+        {
+            
+          headers: {
+            Authorization: token,
+          }
+         
+        }
+      );
+        console.log(res.data);
+      setListings(res.data);
+    } catch (e) {
+      setError("Failed to load listings");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setListings(response.data);
-      } catch (err) {
-        console.error("Error fetching user listings:", err);
-        setError(
-          err.response?.data?.message || 
-          err.message || 
-          "Failed to load your listings"
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+  fetchUserListings();
+}, []);
 
-    fetchUserListings();
-  }, [userId]);
-
-  // Loading State
+  
   if (loading) {
     return (
       <div>
