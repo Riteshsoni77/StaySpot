@@ -6,10 +6,13 @@ const ReviewRoutes= require("./src/routes/ReviewRoutes.js");
 const userRoutes= require("./src/routes/userRoutes.js");
 const isLoggedIn = require('./src/middleware/auth');
 
+
 const cors = require("cors");
 const ExpressError = require("./src/utils/ExpressError.js");
 app.use(express.json());
 app.use(cors());
+app.use(express.urlencoded({extended:false}))
+app.use("/uploads", express.static("uploads"));
 
 
 

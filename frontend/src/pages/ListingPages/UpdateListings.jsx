@@ -19,7 +19,8 @@ export default function UpdateListings() {
     const [formData, setFormData] = useState({
         title: listingdata?.title || "",
         description: listingdata?.description || "",
-        image: listingdata?.image || "",
+        // image: listingdata?.image || "",
+        image: null,
         price: listingdata?.price || "",
         location: listingdata?.location || "",
         country: listingdata?.country || "",
@@ -33,29 +34,34 @@ export default function UpdateListings() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost:8000/listings/${id}`, {
-                listing: formData
-            },
+
+            const data = new FormData();
+
+
+            data.append("listing[title]", formData.title);
+            data.append("listing[description]", formData.description);
+            data.append("listing[price]", formData.price);
+            data.append("listing[location]", formData.location);
+            data.append("listing[country]", formData.country);
+
+            if (formData.image instanceof File) {
+                data.append("image", formData.image);
+            }
+            const response = await axios.put(`http://localhost:8000/listings/${id}`,
+                data,
                 {
                     headers: {
-                        Authorization: token
+                        Authorization: token,
+                         "Content-Type": "multipart/form-data",
                     }
-                });
+                }
+            );
 
             console.log("Form Data Submitted Successfully:", response.data);
             alert("Listing update successfully!");
 
             navigate(`/listing/${id}`);
 
-
-            setFormData({
-                title: "",
-                description: "",
-                image: "",
-                price: "",
-                location: "",
-                country: "",
-            });
         } catch (error) {
             console.error("Error submitting form data:", error);
             alert("Failed to create listing. Please try again.");
@@ -113,7 +119,7 @@ export default function UpdateListings() {
                         />
                     </Box>
                     <Box sx={{ mb: 3 }}>
-                        <TextField
+                        {/* <TextField
                             fullWidth
                             label="Image Link"
                             id="image"
@@ -122,6 +128,15 @@ export default function UpdateListings() {
                             value={formData.image}
                             onChange={handleChange}
                             required
+                        /> */}
+
+                        <input
+                            type="file"
+                            name="image"
+                            accept="image/*"
+                            onChange={(e) =>
+                                setFormData({ ...formData, image: e.target.files[0] })
+                            }
                         />
                     </Box>
                     <Grid container spacing={2}>
