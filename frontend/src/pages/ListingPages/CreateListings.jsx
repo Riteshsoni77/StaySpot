@@ -6,26 +6,26 @@ import axios from "axios";
 import { Navigate, useLocation, useNavigate, useNavigationType } from "react-router-dom";
 
 export default function CreateListings() {
-    
-   const navigate = useNavigate();
+
+    const navigate = useNavigate();
     const location = useLocation();
-const authData = JSON.parse(localStorage.getItem("authData"));
-    const user=authData?.user;
-    const token=authData?.token;
+    const authData = JSON.parse(localStorage.getItem("authData"));
+    const user = authData?.user;
+    const token = authData?.token;
     console.log(token);
-     if (!token) {
+    if (!token) {
         alert("You need to log in first!");
         navigate("/user/auth", { state: { from: "/listings/add" } });
         return;
-    }      
+    }
     const [formData, setFormData] = useState({
         title: "",
         description: "",
-        image: "",
+        image: null,
         price: "",
         location: "",
         country: "",
-       
+
     });
 
     const handleChange = (e) => {
@@ -33,93 +33,97 @@ const authData = JSON.parse(localStorage.getItem("authData"));
         setFormData({ ...formData, [name]: value });
     };
 
-   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        
-        const response = await axios.post("http://localhost:8000/listings/add", 
-          {
-                listing: formData   
-            },
-            {
-                headers: {
-                    Authorization: token   
-                }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const data = new FormData();
+
+
+            data.append("listing[title]", formData.title);
+            data.append("listing[description]", formData.description);
+            data.append("listing[price]", formData.price);
+            data.append("listing[location]", formData.location);
+            data.append("listing[country]", formData.country);
+
+            if (formData.image) {
+                data.append("image", formData.image);
             }
-            
-    );
-        
-        console.log("Form Data Submitted Successfully:", response.data);
-        alert("Listing created successfully!");
-        navigate("/home");
 
+            const response = await axios.post("http://localhost:8000/listings/add",
+                data,
+                {
+                    headers: {
+                        Authorization: token,
+                         "Content-Type": "multipart/form-data",
+                        
+                    }
+                }
 
-         setFormData({
-            title: "",
-            description: "",
-            image: "",
-            price: "",
-            location: "",
-            country: "",
-        });
-    } catch (error) {
-        console.error("Error submitting form data:", error);
-        alert("Failed to create listing. Please try again.");
-    }
-};
+            );
+
+            console.log("Form Data Submitted Successfully:", response.data);
+            alert("Listing created successfully!");
+            navigate("/home");
+
+        } catch (error) {
+            console.error("Error submitting form data:", error);
+            alert("Failed to create listing. Please try again.");
+        }
+    };
+
 
     return (
         <Box>
-            <Navbar/>
-        <Box
-            sx={{
-                Width: "100%",
-                margin: "50px auto",
-                padding: "30px",
-                borderRadius: "10px",
-                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
-                backgroundColor: "#f9f9f9",
-                fontFamily: "Arial, sans-serif",
-            }}
-        >
-            <Typography
-                variant="h4"
-                component="h2"
-                align="center"
-                gutterBottom
-                sx={{ fontWeight: 600, color: "#222" }}
+            <Navbar />
+            <Box
+                sx={{
+                    width: "100%",
+                    margin: "50px auto",
+                    padding: "30px",
+                    borderRadius: "10px",
+                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
+                    backgroundColor: "#f9f9f9",
+                    fontFamily: "Arial, sans-serif",
+                }}
             >
-                Create a New Listing
-            </Typography>
-            <form onSubmit={handleSubmit}>
-                <Box sx={{ mb: 3 }}>
-                    <TextField
-                        fullWidth
-                        label="Title"
-                        id="title"
-                        name="title"
-                        placeholder="Add a catchy title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        required
-                    />
-                </Box>
-                <Box sx={{ mb: 3 }}>
-                    <TextField
-                        fullWidth
-                        label="Description"
-                        id="description"
-                        name="description"
-                        placeholder="Add a description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        multiline
-                        rows={4}
-                        required
-                    />
-                </Box>
-                <Box sx={{ mb: 3 }}>
-                    <TextField
+                <Typography
+                    variant="h4"
+                    component="h2"
+                    align="center"
+                    gutterBottom
+                    sx={{ fontWeight: 600, color: "#222" }}
+                >
+                    Create a New Listing
+                </Typography>
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
+                    <Box sx={{ mb: 3 }}>
+                        <TextField
+                            fullWidth
+                            label="Title"
+                            id="title"
+                            name="title"
+                            placeholder="Add a catchy title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            required
+                        />
+                    </Box>
+                    <Box sx={{ mb: 3 }}>
+                        <TextField
+                            fullWidth
+                            label="Description"
+                            id="description"
+                            name="description"
+                            placeholder="Add a description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            multiline
+                            rows={4}
+                            required
+                        />
+                    </Box>
+                    <Box sx={{ mb: 3 }}>
+                        {/* <TextField
                         fullWidth
                         label="Image Link"
                         id="image"
@@ -128,65 +132,73 @@ const authData = JSON.parse(localStorage.getItem("authData"));
                         value={formData.image}
                         onChange={handleChange}
                         
-                    />
-                </Box>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    /> */}
+                        <input
+                            type="file"
+                            name="image"
+                            accept="image/*"
+                            onChange={(e) =>
+                                setFormData({ ...formData, image: e.target.files[0] })
+                            }
+                        />
+                    </Box>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="Price"
+                                id="price"
+                                name="price"
+                                type="number"
+                                placeholder="1200"
+                                value={formData.price}
+                                onChange={handleChange}
+                                required
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="Country"
+                                id="country"
+                                name="country"
+                                placeholder="ex- India"
+                                value={formData.country}
+                                onChange={handleChange}
+                                required
+                            />
+                        </Grid>
+                    </Grid>
+                    <Box sx={{ mb: 3, mt: 3 }}>
                         <TextField
                             fullWidth
-                            label="Price"
-                            id="price"
-                            name="price"
-                            type="number"
-                            placeholder="1200"
-                            value={formData.price}
+                            label="Location"
+                            id="location"
+                            name="location"
+                            placeholder="ex- Jaipur, Rajasthan"
+                            value={formData.location}
                             onChange={handleChange}
                             required
                         />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Country"
-                            id="country"
-                            name="country"
-                            placeholder="ex- India"
-                            value={formData.country}
-                            onChange={handleChange}
-                            required
-                        />
-                    </Grid>
-                </Grid>
-                <Box sx={{ mb: 3, mt: 3 }}>
-                    <TextField
-                        fullWidth
-                        label="Location"
-                        id="location"
-                        name="location"
-                        placeholder="ex- Jaipur, Rajasthan"
-                        value={formData.location}
-                        onChange={handleChange}
-                        required
-                    />
-                </Box>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    
-                    sx={{
-                        padding: "10px",
-                        fontSize: "1rem",
-                        fontWeight: "bold",
-                        textTransform: "none",
-                    }}
+                    </Box>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
 
-                >
-                    Add
-                </Button>
-            </form>
-        </Box>
-        <Footer/>
+                        sx={{
+                            padding: "10px",
+                            fontSize: "1rem",
+                            fontWeight: "bold",
+                            textTransform: "none",
+                        }}
+
+                    >
+                        Add
+                    </Button>
+                </form>
+            </Box>
+            <Footer />
         </Box>
     );
 }

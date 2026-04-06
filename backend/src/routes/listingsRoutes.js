@@ -4,22 +4,27 @@ const { default: mongoose } = require("mongoose");
 const wrapAsync = require("../utils/wrapAsync");
 const ExpressError = require("../utils/ExpressError");
 const router = express.Router();
-const {listingSchema }= require("../../schema");
+const { listingSchema } = require("../../schema");
 const isLoggedIn = require("../middleware/auth");
+const upload = require("../middleware/multer");
 
 
 
-const validateListing  = (req, res, next) => {
-    console.log("Validating request body:", req.body);
-    const { error } = listingSchema.validate(req.body);
-    if (error) {
-        let errmsg=error.details.map((el)=>el.message).join(",");
-                console.error("Validation Error:", errmsg);
-        throw new ExpressError(400, errmsg);
-    } else {
-          console.log("Validation passed");
-        next();
-    }
+
+
+
+
+const validateListing = (req, res, next) => {
+  console.log("Validating request body:", req.body);
+  const { error } = listingSchema.validate(req.body);
+  if (error) {
+    let errmsg = error.details.map((el) => el.message).join(",");
+    console.error("Validation Error:", errmsg);
+    throw new ExpressError(400, errmsg);
+  } else {
+    console.log("Validation passed");
+    next();
+  }
 
 }
 
@@ -27,45 +32,51 @@ const validateListing  = (req, res, next) => {
 
 
 router.get("/", wrapAsync(async (req, res) => {
-    const allListings = await Listing.find({});
-    res.json(allListings);
+  const allListings = await Listing.find({});
+  res.json(allListings);
 
 }));
 
 
 router.get("/:id", wrapAsync(async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        throw new ExpressError(400, "Invalid ID");
-    }
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new ExpressError(400, "Invalid ID");
+  }
 
-    const listingdata = await Listing.findById(id) .populate("owner", "username name")   
-        .populate({
-            path: "reviews",
-            populate: {
-                path: "user",
-                select: "username name"  
-            }
-        }); 
-    if (!listingdata) {
-        throw new ExpressError(404, "Listing not found");
-    }
-    res.json(listingdata);
+  const listingdata = await Listing.findById(id).populate("owner", "username name")
+    .populate({
+      path: "reviews",
+      populate: {
+        path: "user",
+        select: "username name"
+      }
+    });
+  if (!listingdata) {
+    throw new ExpressError(404, "Listing not found");
+  }
+  res.json(listingdata);
 }));
-
 
 
 router.post("/add", 
      isLoggedIn,
+      upload.single("image"),
    validateListing ,
+   
     wrapAsync(async (req, res) => {
-
-    console.log("Request Body:", req.body);
-   
-   
-    const newlisting = new Listing(req.body.listing);
+      const image= req.file;
+  console.log("Body:", req.body);
+    console.log("File:", req.file);
+    // const newlisting = new Listing(req.body.listing);
+      const newlisting = new Listing({
+      ...req.body.listing, 
+      image: req.file 
+        ? `/uploads/${req.file.filename}`   
+        : undefined
+    });
      newlisting.owner = req.user._id;
 
     const savedListing = await newlisting.save();
@@ -73,14 +84,19 @@ router.post("/add",
 
 
 }));
-router.put("/:id", 
-    isLoggedIn,
-    validateListing ,
-     wrapAsync(async (req, res) => {
+
+
+
+router.put("/:id",
+  isLoggedIn,
+   upload.single("image"),
+  validateListing,
+  wrapAsync(async (req, res) => {
 
     const { id } = req.params;
+
+    const listing = await Listing.findById(id);
     
-  const listing = await Listing.findById(id);
 
     if (!listing) {
       throw new ExpressError(404, "Listing not found");
@@ -89,19 +105,26 @@ router.put("/:id",
     if (!listing.owner.equals(req.user._id)) {
       return res.status(403).json({ message: "You are not allowed to edit this listing" });
     }
+       const updatedData = {
+      ...req.body.listing
+    };
+      if (req.file) {
+      updatedData.image = `/uploads/${req.file.filename}`;
+    }
 
-    const uplistings = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    const uplistings = await Listing.findByIdAndUpdate(id, updatedData,{new:true});
     if (!uplistings) {
-        throw new ExpressError(404, "Listing not found");
+      throw new ExpressError(404, "Listing not found");
     }
     res.status(200).json(uplistings);
 
-}));
+  }));
+  
 
 
 router.delete("/:id",
-    isLoggedIn,
-     wrapAsync(async (req, res) => {
+  isLoggedIn,
+  wrapAsync(async (req, res) => {
 
     const { id } = req.params;
 
@@ -118,30 +141,30 @@ router.delete("/:id",
     let dlisting = await Listing.findByIdAndDelete(id);
 
     if (!dlisting) {
-        throw new ExpressError(404, "Listing not found");
+      throw new ExpressError(404, "Listing not found");
     }
     res.status(200).json({ message: "Listing deleted successfully", dlisting });
 
-}));
+  }));
 
 
 
 
-router.get("/mylisting/:id", 
-    isLoggedIn,
-    wrapAsync(async (req, res) => {
+router.get("/mylisting/:id",
+  isLoggedIn,
+  wrapAsync(async (req, res) => {
     const { id } = req.params;
     console.log(req.params);
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        throw new ExpressError(400, "Invalid ID");
+      throw new ExpressError(400, "Invalid ID");
     }
     const listings = await Listing.find({ owner: id });
     if (!listings || listings.length === 0) {
-        throw new ExpressError(404, "No listings found for this user");
+      throw new ExpressError(404, "No listings found for this user");
     }
     res.status(200).json(listings);
-}));
+  }));
 
 
 module.exports = router; 
