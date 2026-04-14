@@ -1,4 +1,4 @@
-import { Button, Card, Grid, Typography } from "@mui/material";
+import { Button, Card, Grid, Rating, Typography } from "@mui/material";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 
@@ -51,9 +51,11 @@ export default function Reviewscard({ id, review, onDelete }) {
             <Grid container spacing={2}>
 
                 <Grid item xs={12} >
-                    <Typography variant="body1">
-                        <strong>Rating:</strong> {review?.rating}
-                    </Typography>
+                     <Rating
+                        name="rating"
+                        value={review?.rating}
+                       
+                    />
 
                 </Grid>
                 <Grid item xs={12}>

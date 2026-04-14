@@ -54,7 +54,7 @@ export default function Userlistings() {
     );
   }
 
-  // Error State
+  
   if (error) {
     return (
       <div>

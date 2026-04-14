@@ -13,7 +13,6 @@ const upload = require("../middleware/multer");
 
 
 
-
 const validateListing = (req, res, next) => {
   console.log("Validating request body:", req.body);
   const { error } = listingSchema.validate(req.body);
