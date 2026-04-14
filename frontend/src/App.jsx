@@ -5,7 +5,8 @@ import ShowlistingData from "./pages/ListingPages/ShowListingData";
 import Createlistings from "./pages/ListingPages/CreateListings";
 import UpdateListings from "./pages/ListingPages/UpdateListings";
 import Authentication from "./pages/Auth/Authentication";
-import Userlistings from "./pages/ListingPages/userlistings";
+
+import Userlistings from "./pages/ListingPages/Userlistings";
 
 
 function App() {
