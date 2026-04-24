@@ -27,7 +27,6 @@ app.get("/", (req, res) => {
 
 })
 
-
 app.all('/{*any}', (req, res, next) => {
     next(new ExpressError(404, "Page not found"));
 });
@@ -51,6 +50,3 @@ start().catch((err) => console.log(err));
 app.listen(8000, () => {
     console.log("app is listing on port 8000");
 })
-
-
-
