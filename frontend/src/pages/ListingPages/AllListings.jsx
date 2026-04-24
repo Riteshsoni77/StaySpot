@@ -3,8 +3,11 @@ import axios from "axios";
 import Navbar from "../../conponents/includes/Navbar.jsx";
 import Footer from "../../conponents/includes/Footer.jsx";
 import Card from "../../conponents/ListingsComponents/ListingCard.jsx";
+import server from "../../../environment.js";
 
 export default function Listings() {
+
+   
 
     const [listings, setListings] = useState([]);
     const [error, setError] = useState(null);
@@ -14,7 +17,8 @@ export default function Listings() {
     useEffect(() => {
         const fetchListings = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/listings");
+               
+                const response = await axios.get(`${server}/listings`);
                 setListings(response.data);
             } catch (err) {
                 setError(err.message);
