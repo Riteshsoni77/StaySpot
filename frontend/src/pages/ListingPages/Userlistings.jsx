@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../../conponents/includes/Navbar.jsx";
 import Footer from "../../conponents/includes/Footer.jsx";
 import Card from "../../conponents/ListingsComponents/ListingCard.jsx";
+import server from "../../../environment.js";
 
 export default function Userlistings() {
   const [listings, setListings] = useState([]);
@@ -20,7 +21,7 @@ export default function Userlistings() {
     try {
 
       const res = await axios.get(
-        `http://localhost:8000/listings/mylisting/${userId}`,
+        `${server}/listings/mylisting/${userId}`,
         {
             
           headers: {

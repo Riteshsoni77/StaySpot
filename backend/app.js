@@ -1,3 +1,6 @@
+if (process.env.Node_ENV !== "production") {
+    require("dotenv").config();
+}
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -50,3 +53,4 @@ start().catch((err) => console.log(err));
 app.listen(8000, () => {
     console.log("app is listing on port 8000");
 })
+

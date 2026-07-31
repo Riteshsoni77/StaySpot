@@ -71,11 +71,9 @@ router.post("/add",
     console.log("File:", req.file);
     // const newlisting = new Listing(req.body.listing);
       const newlisting = new Listing({
-      ...req.body.listing, 
-      image: req.file 
-        ? `/uploads/${req.file.filename}`   
-        : undefined
-    });
+  ...req.body.listing,
+  image: req.file ? req.file.path : undefined
+});
      newlisting.owner = req.user._id;
 
     const savedListing = await newlisting.save();
@@ -108,8 +106,8 @@ router.put("/:id",
       ...req.body.listing
     };
       if (req.file) {
-      updatedData.image = `/uploads/${req.file.filename}`;
-    }
+    updatedData.image = req.file.path;
+}
 
     const uplistings = await Listing.findByIdAndUpdate(id, updatedData,{new:true});
     if (!uplistings) {

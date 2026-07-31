@@ -2,6 +2,7 @@ import { Button, Grid, Rating, TextField } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import server from "../../../environment";
 
 export default function ReviewForm({ id,onAddReview }) {
       const navigate = useNavigate();
@@ -44,7 +45,7 @@ export default function ReviewForm({ id,onAddReview }) {
 
         try {
 
-            const res = await axios.post(`http://localhost:8000/listings/${id}/reviews`,
+            const res = await axios.post(`${server}/listings/${id}/reviews`,
 
                  {
                 review: {

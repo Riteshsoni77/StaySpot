@@ -8,6 +8,7 @@ import Navbar from "../../conponents/includes/Navbar";
 import Reviewform from "../../conponents/ListingsComponents/ReviewForm";
 import { pink } from "@mui/material/colors";
 import Reviewscard from "../../conponents/ListingsComponents/ReviewsCard";
+import server from "../../../environment";
 
 export default function ShowlistingData() {
     const { id } = useParams();
@@ -45,7 +46,7 @@ export default function ShowlistingData() {
 
         try {
 
-            await axios.delete(`http://localhost:8000/listings/${id}`,
+            await axios.delete(`${server}/listings/${id}`,
                 {
                     headers: {
                         Authorization: token,
@@ -72,7 +73,7 @@ export default function ShowlistingData() {
 
         const fetchListingData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/listings/${id}`);
+                const response = await axios.get(`${server}/listings/${id}`);
                 setlistingdata(response.data);
                 setReviews(response.data.reviews);
 
@@ -109,8 +110,8 @@ export default function ShowlistingData() {
                     <CardMedia
                         component="img"
                         height="400"
-                        // image={listingdata.image}
-                        image={`http://localhost:8000${listingdata.image}`}
+                         image={listingdata.image}
+                       
                         alt={listingdata.title}
                     />
                     <CardContent>
@@ -156,6 +157,7 @@ export default function ShowlistingData() {
                         </Grid>
                     </CardContent>
                     {userid === listingdata.owner?._id ? <Button
+                   
                         type="submit"
                         variant="contained"
                         color="primary"
@@ -172,9 +174,11 @@ export default function ShowlistingData() {
 
                     >
                         Edit
-                    </Button> : <></>}
+                        
+                     </Button> : <></>}
 
                     {userid === listingdata.owner?._id ? <Button
+                   
                         type="submit"
                         variant="contained"
                         color="primary"
@@ -190,8 +194,8 @@ export default function ShowlistingData() {
                         }}
 
                     >
-                        Delete
-                    </Button> : <></>}
+                        Delete 
+                     </Button> : <></>}
                 </Card>
 
                 <Grid sx={{ margin: "20px" }} >

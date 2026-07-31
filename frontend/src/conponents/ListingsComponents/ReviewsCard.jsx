@@ -1,6 +1,7 @@
 import { Button, Card, Grid, Rating, Typography } from "@mui/material";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import server from "../../../environment";
 
 export default function Reviewscard({ id, review, onDelete }) {
      const authData = JSON.parse(localStorage.getItem("authData"));
@@ -16,7 +17,7 @@ export default function Reviewscard({ id, review, onDelete }) {
     const handleDelete = async () => {
         try {
 
-            await axios.delete(`http://localhost:8000/listings/${id}/reviews/${review._id}`,
+            await axios.delete(`${server}/listings/${id}/reviews/${review._id}`,
           {      
    headers: {
     Authorization: token,

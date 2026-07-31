@@ -1,6 +1,8 @@
 const server =
   window.location.hostname === "localhost"
     ? "http://localhost:8000"
-    : "https://stayspotbackend.onrender.com";
+    : "https://hotel-listing-platform.onrender.com";
+    
+   
 
 export default server;

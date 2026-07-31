@@ -6,6 +6,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Navbar from "../../conponents/includes/Navbar";
 import Footer from "../../conponents/includes/Footer";
 import { useLocation, useNavigate } from "react-router-dom";
+import server from "../../../environment";
 
 
 export default function Authentication() {
@@ -35,7 +36,7 @@ export default function Authentication() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/user/login",
+      const response = await axios.post(`${server}/user/login`,
         {
 
           username: formData.username,
@@ -65,7 +66,7 @@ console.log(response.data.user._id);
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8000/user/register",
+      await axios.post(`${server}/user/register`,
         {
           name: formData.name,
           username: formData.username,

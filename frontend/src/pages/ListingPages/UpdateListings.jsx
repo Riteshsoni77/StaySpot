@@ -4,6 +4,7 @@ import Footer from "../../conponents/includes/Footer";
 import Navbar from "../../conponents/includes/Navbar";
 import axios from "axios";
 import { useLocation, useNavigate, useNavigationType } from "react-router-dom";
+import server from "../../../environment";
 
 export default function UpdateListings() {
     const authData = JSON.parse(localStorage.getItem("authData"));
@@ -47,7 +48,7 @@ export default function UpdateListings() {
             if (formData.image instanceof File) {
                 data.append("image", formData.image);
             }
-            const response = await axios.put(`http://localhost:8000/listings/${id}`,
+            const response = await axios.put(`${server}/listings/${id}`,
                 data,
                 {
                     headers: {
